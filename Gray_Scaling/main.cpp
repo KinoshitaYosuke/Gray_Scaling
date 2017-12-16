@@ -16,9 +16,10 @@ using namespace std;
 int main(int argc, char** argv) {
 
 	//テスト画像ファイル一覧メモ帳読み込み
-	char test_name[1024];
-	FILE *test_data;
-	fopen_s(&test_data, "C:/photo/train_data_from_demo/pre_experiment_data/CD_train.txt", "r");
+	char test_name[1024],test_name2[1024];
+	FILE *test_data,*test_data2;
+	fopen_s(&test_data, "C:/photo/train_data_from_demo/pre_experiment_data/Only_One_Pose/CD_pos/list_Lie_Only.txt", "r");
+
 	if (test_data == NULL) {
 		cout << "error" << endl;
 		return 0;
@@ -35,13 +36,20 @@ int main(int argc, char** argv) {
 			new_test_name[i + 1] = '\0';
 		}
 
+
 		//画像の取り込み
 		cv::Mat img = cv::imread(new_test_name, 1);	//検出する画像
-		cv::Mat gray;
-		cv::cvtColor(img, gray, CV_RGB2GRAY);
-		cv::imwrite(new_test_name, gray);
+		img= img(cv::Rect( 0, img.rows/4, img.cols, img.rows/2));
+		cv::imshow("", img);
+		cvWaitKey(10);
+		if (img.channels() == 1) cv::imwrite(new_test_name, img);
+		else {
+			cv::Mat gray;
+			cv::cvtColor(img, gray, CV_RGB2GRAY);
+			cv::imwrite(new_test_name, gray);
+		}
+		
 	}
 	fclose(test_data);
-	
 	return 0;
 }
