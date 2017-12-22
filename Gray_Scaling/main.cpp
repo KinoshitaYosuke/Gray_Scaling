@@ -166,12 +166,43 @@ void Normalize_One_Pose() {
 	fclose(test_data);
 }
 
+void check_aspect() {
+	char train_name[1024], origin_name[1024];
+	FILE *train_data, *origin_data;
+
+	fopen_s(&origin_data, "C:/photo/train_data_from_demo/pre_experiment_data/train_64x128_H96/list_inria2.txt", "r");
+	fopen_s(&train_data, "C:/photo/train_data_from_demo/pre_experiment_data/train_64x128_H96/list_inria.txt", "r");
+
+	while (fgets(origin_name, 256, origin_data) != NULL && fgets(train_name, 256, train_data) != NULL) {
+		string name_ori = origin_name;
+		char new_origin_name[1024];
+		for (int i = 0; i < name_ori.length() - 1; i++) {
+			new_origin_name[i] = origin_name[i];
+			new_origin_name[i + 1] = '\0';
+		}
+		string name_tra = train_name;
+		char new_train_name[1024];
+		for (int i = 0; i < name_tra.length() - 1; i++) {
+			new_train_name[i] = train_name[i];
+			new_train_name[i + 1] = '\0';
+		}
+		cv::Mat img = cv::imread(new_origin_name, 1);
+		cout << (float) img.rows / img.cols << endl;
+		if (img.channels() == 1) { cv::cvtColor(img, img, CV_RGB2GRAY); }
+		cv::imwrite(new_train_name, img);
+
+	}
+	fclose(train_data);
+	fclose(origin_data);
+}
+
 int main(int argc, char** argv) {
 	
+	check_aspect();
 	
 //	RGB_to_Gray();
 
-	Normalize_One_Pose();
+//	Normalize_One_Pose();
 
 //	check();
 
