@@ -260,3 +260,7 @@ paket-files/
 __pycache__/
 *.pyc
 /Gray_Scaling/2014_03_14_1.jpg
+/Gray_Scaling/CD_pos
+/Gray_Scaling/list_cd_2.txt
+/Gray_Scaling/INRIA-test-list.txt
+/Gray_Scaling/INRIA-list.txt
