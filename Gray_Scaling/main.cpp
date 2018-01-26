@@ -91,25 +91,31 @@ void copy_data() {
 	char train_name[1024], origin_name[1024];
 	FILE *train_data, *origin_data;
 
-	fopen_s(&origin_data, "C:/photo/test_data.txt", "r");
-	fopen_s(&train_data, "C:/photo/test_data2.txt", "r");
+	fopen_s(&origin_data, "C:/photo/predict-list-back.txt", "r");
+	fopen_s(&train_data, "C:/photo/predict-list-back2.txt", "r");
 
-	while (fgets(origin_name, 256, origin_data) != NULL && fgets(train_name, 256, train_data) != NULL) {
+	while (fgets(origin_name, 256, origin_data) != NULL) {
 		string name_ori = origin_name;
 		char new_origin_name[1024];
 		for (int i = 0; i < name_ori.length() - 1; i++) {
 			new_origin_name[i] = origin_name[i];
 			new_origin_name[i + 1] = '\0';
 		}
-		string name_tra = train_name;
-		char new_train_name[1024];
-		for (int i = 0; i < name_tra.length() - 1; i++) {
-			new_train_name[i] = train_name[i];
-			new_train_name[i + 1] = '\0';
+		for (int k = 0; k < 10; k++) {
+			fgets(train_name, 256, train_data);
+			string name_tra = train_name;
+			char new_train_name[1024];
+			for (int i = 0; i < name_tra.length() - 1; i++) {
+				new_train_name[i] = train_name[i];
+				new_train_name[i + 1] = '\0';
+			}
+			cv::Mat img = cv::imread(new_origin_name, 1);
+			img = img(cv::Rect(rand() % (img.cols - 256), rand() % (img.rows - 256), 256, 256));
+			cv::resize(img, img, cv::Size(), 128.0 / img.cols, 128.0 / img.rows);
+			cv::imshow("", img);
+			cvWaitKey(50);
+			cv::imwrite(new_train_name, img);
 		}
-		cv::Mat img = cv::imread(new_origin_name, 1);
-		cv::imwrite(new_train_name, img);
-
 	}
 	fclose(train_data);
 	fclose(origin_data);
@@ -474,7 +480,7 @@ void Result_MR_and_FPPI() {
 			num_G++;
 		}
 		fclose(GT);
-		char Result_name[1024] = "C:/photo/result_data_from_demo/2018_01_13_OOP/save_data/0.9_100/";
+		char Result_name[1024] = "C:/photo/result_data_from_demo/2018_01_13_EP/save_data/0.5_150/";
 		strcat_s(Result_name, List_name);
 		//Resultƒtƒ@ƒCƒ‹“Ç‚Ýž‚Ý
 		char Result_n[5][1024];
@@ -520,7 +526,7 @@ void Result_MR_and_FPPI() {
 			img = draw_rectangle(img, place_GT[i].x, place_GT[i].y, place_GT[i].width, place_GT[i].height, 0, 0, 255);
 		}
 		for (int i = 0; i < num_R; i++) {
-			if(place_Result[i].yudo>=0.5)
+			if(place_Result[i].yudo>=0.921)
 			img = draw_rectangle(img, place_Result[i].x, place_Result[i].y, place_Result[i].width, place_Result[i].height, 255, 0, 0);
 		}
 		cv::imshow("", img);
@@ -671,7 +677,7 @@ int main(int argc, char** argv) {
 	
 //	Image_Binarization();
 
-	Result_MR_and_FPPI_2();
+	Result_MR_and_FPPI();
 
 	return 0;
 }
