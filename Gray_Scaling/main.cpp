@@ -296,11 +296,11 @@ void check_aspect() {
 	char train_name[1024], origin_name[1024];
 	FILE *train_data, *origin_data;
 
-	if (fopen_s(&origin_data, "C:/photo/INRIAPerson/test_INRIA.txt", "r") != 0) {
+	if (fopen_s(&origin_data, "C:/photo/train_data_from_demo/pre_experiment_data/Only_One_Pose/ex_experiment/Squat.txt", "r") != 0) {
 		cout << 1 << endl;
 		return;
 	}
-	if (fopen_s(&train_data, "C:/photo/INRIAPerson/test_INRIA2.txt", "r") != 0) {
+	if (fopen_s(&train_data, "C:/photo/train_data_from_demo/pre_experiment_data/Only_One_Pose/ex_experiment/Squat.txt", "r") != 0) {
 		cout << 2 << endl;
 		return;
 	}
@@ -319,18 +319,21 @@ void check_aspect() {
 			new_train_name[i] = train_name[i];
 			new_train_name[i + 1] = '\0';
 		}
-		char origin[1024] = "C:/photo/INRIAPerson/Test/pos/";
-		char train[1024] = "C:/photo/INRIAPerson/test_data_INRIA/";
-
+		char origin[1024] = "C:/photo/train_data_from_demo/pre_experiment_data/Only_One_Pose/ex_experiment/Squat_Only/";
+		char train[1024] =  "C:/photo/train_data_from_demo/pre_experiment_data/Only_One_Pose/ex_experiment/Squat_Only/";
 		strcat_s(origin, new_origin_name);
 		strcat_s(train, new_train_name);
 
 		cv::Mat img = cv::imread(origin, 1);
 //		cout << (float) img.rows / img.cols << endl;
-		if (img.rows == 480 && img.cols == 640) {
+		cv::resize(img, img, cv::Size(), 128.0 / img.cols, 128.0 / img.rows);
+		img = img(cv::Rect(28, 0, 72, 128));
+		if (img.rows == 128 && img.cols == 72) {
 			cout << num << ":" << new_origin_name << endl;
 			num++;
-		//	if (img.channels() != 1) { cv::cvtColor(img, img, CV_RGB2GRAY); }
+			cv::imshow("", img);
+			cvWaitKey(10);
+			if (img.channels() != 1) { cv::cvtColor(img, img, CV_RGB2GRAY); }
 			cv::imwrite(train, img);
 		}
 	}
@@ -480,7 +483,7 @@ void Result_MR_and_FPPI() {
 			num_G++;
 		}
 		fclose(GT);
-		char Result_name[1024] = "C:/photo/result_data_from_demo/2018_01_13_EP/save_data/0.5_150/";
+		char Result_name[1024] = "C:/photo/result_data_from_demo/2018_01_31_EP/result_data/";
 		strcat_s(Result_name, List_name);
 		//Resultファイル読み込み
 		char Result_n[5][1024];
@@ -582,7 +585,7 @@ void Result_MR_and_FPPI_2() {
 			num_G++;
 		}
 		fclose(GT);
-		char Result_name[1024] = "C:/photo/result_data_from_demo/2018_01_15_AP/save_data/0.9_100/";
+		char Result_name[1024] = "C:/photo/result_data_from_demo/2018_01_15_AP/save_data/0.5_IoU0.3/";
 		strcat_s(Result_name, List_name);
 		//Resultファイル読み込み
 		char Result_n[10][1024];
@@ -641,11 +644,11 @@ void Result_MR_and_FPPI_2() {
 			img = draw_rectangle(img, place_GT[i].x, place_GT[i].y, place_GT[i].width, place_GT[i].height, 0, 0, 255);
 		}
 		for (int i = 0; i < num_R; i++) {
-			if (place_Result[0][i].yudo >= 0.5)
+			if (place_Result[1][i].yudo >= 0.9)
 				img = draw_rectangle(img, place_Result[0][i].x, place_Result[0][i].y, place_Result[0][i].width, place_Result[0][i].height, 255, 0, 0);
 		}
 		for (int i = 0; i < num_R; i++) {
-			if (place_Result[1][i].yudo >= 0.5) {
+			if (place_Result[1][i].yudo >= 0.9) {
 				img = draw_rectangle(img, place_Result[1][i].x, place_Result[1][i].y, place_Result[1][i].width, place_Result[1][i].height, 0, 255, 0);
 			}
 		}
